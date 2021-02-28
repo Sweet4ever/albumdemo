@@ -1,4 +1,4 @@
-package se.group4.springalbum;
+package se.group4.springalbum.entities;
 
 import javax.persistence.*;
 
@@ -13,7 +13,8 @@ public class Album {
     private String artist;
 
     public Album(){}
-    public Album(String name, String artist){
+    public Album(int id, String name, String artist){
+        this.id = id;
         this.name = name;
         this.artist = artist;
     }
