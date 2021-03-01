@@ -6,59 +6,75 @@ import org.springframework.web.server.ResponseStatusException;
 import se.group4.springalbum.repositories.AlbumRepository;
 import se.group4.springalbum.Dto.AlbumDto;
 import se.group4.springalbum.entities.Album;
+import se.group4.springalbum.mappers.Albummapper;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
-public class AlbumService {
+public class AlbumService implements se.group4.springalbum.services.Service {
 
     private final AlbumRepository albumRepository;
-
+    Albummapper albummapper = new Albummapper();
     public AlbumService(AlbumRepository albumRepository){
         this.albumRepository = albumRepository;
     }
 
+    @Override
     public List<AlbumDto> getAllAlbums(){
-        return mapp(albumRepository.findAll());
+        return albummapper.mapp(albumRepository.findAll());
     }
 
-    public AlbumDto getOne(int id){
-        return mapp(albumRepository.findById(id))
-                .orElseThrow(() -> new ResponseStatusException(
-                        HttpStatus.NOT_FOUND, "Id: "+id+" not found"));
+    @Override
+    public Optional<AlbumDto> findOne(int id){
+        return albummapper.mapp(albumRepository.findById(id));
     }
 
+    @Override
     public AlbumDto createAlbum(AlbumDto album){
         if(album.getName().isEmpty()){
             System.out.printf("Det blev fel i create ");
             throw new RuntimeException();
         }
         //Mapp from Dto to album
-        return mapp(albumRepository.save(mapp(album)));
+        return albummapper.mapp(albumRepository.save(albummapper.mapp(album)));
     }
 
-    public AlbumDto mapp(Album album){
-        return new AlbumDto(album.getId(), album.getName(), album.getArtist());
+
+
+    @Override
+    public void delete(int id) {
+        albumRepository.deleteById(id);
     }
 
-    public Album mapp(AlbumDto albumDto){
-        return new Album(albumDto.getId(), albumDto.getName(), albumDto.getArtist());
-    }
-
-    public Optional<AlbumDto> mapp(Optional<Album> optionalAlbum){
-        if(optionalAlbum.isEmpty()){
-            return Optional.empty();
+    @Override
+    public AlbumDto replace(int id, AlbumDto albumDto) {
+        Optional<Album> album = albumRepository.findById(id);
+        if(album.isPresent()){
+            Album updatedAlbum = album.get();
+            updatedAlbum.setName(albumDto.getName());
+            updatedAlbum.setArtist(albumDto.getArtist());
+            return albummapper.mapp(albumRepository.save(updatedAlbum));
+        }else{
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND,
+                    "Id: "+id+" not found");
         }
-        return Optional.of(mapp(optionalAlbum.get()));
     }
 
-    public List<AlbumDto> mapp(List<Album> all){
-        return all
-                .stream()
-                .map(this::mapp)
-                .collect(Collectors.toList());
+    @Override
+    public AlbumDto update(int id, AlbumDto albumDto) {
+        Optional<Album> album = albumRepository.findById(id);
+        if(album.isPresent()){
+            Album updatedAlbum = album.get();
+            if(albumDto.getName() != null)
+                updatedAlbum.setName(albumDto.getName());
+            if(albumDto.getArtist() != null)
+                updatedAlbum.setArtist(albumDto.getArtist());
+            return albummapper.mapp(albumRepository.save(updatedAlbum));
+        }else{
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND,
+                    "Id: "+id+" not found");
+        }
     }
-
 }
+
