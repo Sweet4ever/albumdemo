@@ -3,6 +3,7 @@ package se.group4.springalbum.Controllers;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.server.ResponseStatusException;
+import se.group4.springalbum.Dto.AlbumDto;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
@@ -28,5 +29,4 @@ class albumControllerTest {
         var exception = assertThrows(ResponseStatusException.class, ()-> albumController.findOne(2));
         assertThat(exception.getStatus()).isEqualTo(HttpStatus.NOT_FOUND);
     }
-
 }

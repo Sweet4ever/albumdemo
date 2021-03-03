@@ -9,7 +9,7 @@ import java.util.Optional;
 public class TestService implements Service {
     @Override
     public List<AlbumDto> getAllAlbums() {
-        return null;
+        return List.of(new AlbumDto(1, "Album1", "Album1"), new AlbumDto(2, "Album2", "Album2"));
     }
 
     @Override
