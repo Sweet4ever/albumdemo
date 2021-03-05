@@ -12,6 +12,8 @@ public interface Service {
 
     AlbumDto createAlbum(AlbumDto album);
 
+    List<AlbumDto> search(String name);
+
     void delete(int id);
 
     AlbumDto replace(int id, AlbumDto albumDto);

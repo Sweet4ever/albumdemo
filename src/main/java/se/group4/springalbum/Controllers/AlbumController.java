@@ -28,6 +28,11 @@ public class AlbumController{
                         "Id: "+id+" not found"));
     }
 
+    @GetMapping("/albums/search")
+    public List<AlbumDto> search(@RequestParam String name){
+        return service.search(name);
+    }
+
     @PostMapping("/albums")
     @ResponseStatus(HttpStatus.CREATED)
     public AlbumDto create(@RequestBody AlbumDto album){

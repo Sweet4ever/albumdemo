@@ -40,6 +40,11 @@ public class AlbumService implements se.group4.springalbum.services.Service {
         return albummapper.mapp(albumRepository.save(albummapper.mapp(album)));
     }
 
+    @Override
+    public List<AlbumDto> search(String name){
+        return  albummapper.mapp(albumRepository.findAllByNameContains(name));
+    }
+
 
 
     @Override

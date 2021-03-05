@@ -31,6 +31,11 @@ public class TestService implements Service {
     }
 
     @Override
+    public List<AlbumDto> search(String name){
+        return null;
+    }
+
+    @Override
     public AlbumDto replace(int id, AlbumDto albumDto) {
         return null;
     }

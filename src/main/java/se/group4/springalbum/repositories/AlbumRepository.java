@@ -9,4 +9,5 @@ import java.util.List;
 @Repository
 public interface AlbumRepository extends JpaRepository<Album, Integer>{
     List<Album> findAllByName(String name);
+    List<Album> findAllByNameContains(String name);
 }
